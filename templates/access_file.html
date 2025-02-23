@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access File</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/access_file.css') }}">
+</head>
+<body>
+    <div>
+        <div>
+            <h2>User Panel</h2>
+        </div>
+        <nav>
+            <div>
+                <a href="{{ url_for('user.user_dashboard') }}">
+                    Upload Data
+                </a>
+                <a href="{{ url_for('user.stored_files') }}">
+                    My Files
+                </a>
+                <a href="{{ url_for('user.access_file_page') }}">
+                    Access Files
+                </a>
+                
+                <a href="{{ url_for('auth.logout') }}">
+                    Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+    <div>
+        <div>
+            <h1>Access File</h1>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('user.access_file') }}" method="POST" enctype="multipart/form-data">
+                <div>
+                    <label for="qr_code_file">
+                        Upload QR Code
+                    </label>
+                    <input type="file"
+                           id="qr_code_file"
+                           name="qr_code_file"
+                           accept="image/*"
+                           required>
+                </div>
+                <button type="submit">
+                    Submit QR Code
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

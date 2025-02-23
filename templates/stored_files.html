@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Stored Files</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stored_files.css') }}">
+</head>
+<body>
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>User Panel</h2>
+            </div>
+            <nav>
+                <div class="nav-container">
+                    <a href="{{ url_for('user.user_dashboard') }}" class="nav-link">
+                        Upload Data
+                    </a>
+                    <a href="{{ url_for('user.stored_files') }}" class="nav-link">
+                        My Files
+                    </a>
+                    <a href="{{ url_for('user.access_file_page') }}" class="nav-link">
+                        Access Files
+                    </a>
+                   
+                    <a href="{{ url_for('auth.logout') }}" class="nav-link">
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{category}}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Main Content -->
+            <div class="content-container">
+                <div class="header-container">
+                    <h1 class="page-title">My Stored Files</h1>
+                    <a href="{{ url_for('user.upload_file') }}" class="upload-button">
+                        Upload New File
+                    </a>
+                </div>
+
+                <!-- Files List -->
+                {% if files %}
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Uploaded At</th>
+                                <th>Size</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for file in files %}
+                            <tr>
+                                <td>
+                                    <div class="file-cell">
+                                        <span class="file-icon"></span>
+                                        {{ file.filename }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ file.uploaded_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                                </td>
+                                <td>
+                                    {{ (file.size / 1024)|round|int if file.size else 0 }} KB
+                                </td>
+                                <td>
+                                    <span class="status-badge {{ file.status|default('active')|lower }}">
+                                        {{ file.status|default('active')|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V7a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <h3>No files</h3>
+                    <p>Get started by uploading a new file.</p>
+                    <div class="upload-container">
+                        <a href="{{ url_for('user.upload_file') }}" class="upload-button">
+                            Upload File
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
